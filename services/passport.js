@@ -22,11 +22,13 @@ passport.deserializeUser((id, done) => {
         });
 });
 
+// proxy: true tells the app that it's fine if we pass through a proxy (Heroku's proxy)
 passport.use(
     new GoogleStrategy({
         clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
-        callbackURL: '/auth/google/callback'
+        callbackURL: '/auth/google/callback',
+        proxy: true
     }, 
     (accessToken, refreshToken, profile, done) => {
             //console.log('access token', accessToken);
