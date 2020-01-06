@@ -30,25 +30,18 @@ passport.use(
         callbackURL: '/auth/google/callback',
         proxy: true
     }, 
-    (accessToken, refreshToken, profile, done) => {
-            //console.log('access token', accessToken);
-            //console.log('refresh token', refreshToken);
-            //console.log('profile', profile);
-
-            // returns a promise - looking for user to see if they exist in the db - if they do, call done()
-            // if they don't, create new record, save it, call done()
-            User.findOne({ googleId: profile.id })
-                .then((existingUser) => {
-                    if(existingUser) {
-                        // already have a record with the given id
-                        // null means everything went fine, no errors - then pass existingUser
-                        done(null, existingUser);
-                    } else {
-                        // we don't have a user - create a new one
-                        new User({ googleId: profile.id }).save()
-                            .then(user => done(null, user));
-                    }
-                })
+    async (accessToken, refreshToken, profile, done) => {
+            // async/await for mongo
+            const existingUser = await User.findOne({ googleId: profile.id });
+                
+            if(existingUser) {
+                // already have a record with the given id
+                // null means everything went fine, no errors - then pass existingUser
+                return done(null, existingUser);
+            }
+            // we don't have a user - create a new one
+            const user = await new User({ googleId: profile.id }).save()
+            done(null, user);
         }
     )
 );

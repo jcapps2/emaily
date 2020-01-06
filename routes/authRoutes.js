@@ -7,12 +7,18 @@ module.exports = app => {
         })
     );
 
-    app.get('/auth/google/callback', passport.authenticate('google'));
+    app.get(
+        '/auth/google/callback', 
+        passport.authenticate('google'),    // middleware that passes to following arrow function
+        (req, res) => {
+            res.redirect('/surveys');       // redirect passes user to /surveys
+        }
+    );
 
-    // logout is automatically connected to req via passport - kills cookie
+    // logout() is automatically connected to req via passport - kills cookie
     app.get('/api/logout', (req, res) => {
         req.logout();
-        res.send(req.user);
+        res.redirect('/');      // '/' sends user back to root
     });
     
     // req is incoming request, res is outgoing response
