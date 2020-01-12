@@ -10,6 +10,7 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 require('./models/User');                   // when app boots up, User.js will load, and mongo will as well
+require('./models/Survey');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURI);
@@ -31,6 +32,7 @@ app.use(passport.session());
 
 require('./routes/authRoutes')(app);        // neat little trick - require is calling authRoutes, which returns function
 require('./routes/billingRoutes')(app);     // so both of these lines turn into functions and execute immediately, and pass in 'app'
+require('./routes/surveyRoutes')(app);
 
 // Only runs in production - if this is confusing, watch Lecture 116 Routing in Production
 if (process.env.NODE_ENV === 'production') {    

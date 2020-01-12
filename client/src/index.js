@@ -8,6 +8,10 @@ import reduxThunk from 'redux-thunk';
 import App from './components/App';
 import reducers from './reducers';
 
+// Dev testing for sending emails
+import axios from 'axios';
+window.axios = axios;
+
 // currently has dummy reducer
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 

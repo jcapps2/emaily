@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER } from './types';
+import { FETCH_USER, FETCH_SURVEYS } from './types';
 
 // redux-thunk allows us to manually use redux's dispatch function
 
@@ -17,4 +17,17 @@ export const handleToken = (token) => async dispatch => {
     const res = await axios.post('/api/stripe', token);         // posting token to backend server
 
     dispatch({ type: FETCH_USER, payload: res.data });          // remember that redux is allowing us to manually control the dispatch function to update state
+};
+
+export const submitSurvey = (values, history) => async dispatch => {
+    const res = await axios.post('/api/surveys', values);
+
+    history.push('/surveys');       // using React Router to navigate away once a form has been emailed out
+    dispatch({ type: FETCH_USER, payload: res.data });
+};
+
+export const fetchSurveys = () => async dispatch => {
+    const res = await axios.get('/api/surveys');
+
+    dispatch({ type: FETCH_SURVEYS, payload: res.data });
 };
